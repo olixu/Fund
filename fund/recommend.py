@@ -16,6 +16,8 @@ import argparse
 import numpy as np
 import pandas as pd
 import requests
+import datetime
+
 
 # 数据库设置
 conn1 = sqlite3.connect("../database/fundinfo.db")
@@ -26,6 +28,7 @@ c2 = conn2.cursor()
 codes = []
 data = []
 tables = c2.execute("select tbl_name from sqlite_master")
+date_p = str(datetime.datetime.now().date())
 
 for i in tables:
     codes.append(i[0])
@@ -36,7 +39,7 @@ codes = sorted(set(codes), key = codes.index)
 for code in codes:
     # 先删除所有的历史的最新数据，方便验证
     #c2.execute("delete from '" + code + "' where date='2020-05-29'")
-    outcome = c2.execute("select * from '" + code + "' where date='2020-05-29'")
+    outcome = c2.execute("select * from '" + code + "' where date='{}'".format(date_p))
     for _ in outcome:
         x = list(_)
         x.insert(0,code)
@@ -49,7 +52,7 @@ df[['净值', '累计净值', '日涨跌幅', '最近一周涨跌幅', '最近�
 
 # 设置一定的策略来挑选合适的基金
 # 选择最近一年涨幅大于50且小于1000的
-record = df[(df['最近一年涨跌幅']>80) & (df['最近一年涨跌幅']<1000)]
+record = df[(df['最近一年涨跌幅']>50) & (df['最近一年涨跌幅']<1000)]
 record1 = record[record['最近一周涨跌幅']<-2.0]
 print(record1)
 record2 = record[record['最近一周涨跌幅']>5.0]
