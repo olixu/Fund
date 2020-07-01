@@ -38,7 +38,7 @@ codes = sorted(set(codes), key = codes.index)
 
 for code in codes:
     # 先删除所有的历史的最新数据，方便验证
-    #c2.execute("delete from '" + code + "' where date='2020-05-29'")
+    #outcome = c2.execute("select * from '" + code + "' where date='{}'".format('2020-06-10'))
     outcome = c2.execute("select * from '" + code + "' where date='{}'".format(date_p))
     for _ in outcome:
         x = list(_)
@@ -48,7 +48,6 @@ for code in codes:
 df = pd.DataFrame(data, columns=['代码', '时期', '净值', '累计净值', '日涨跌幅', '最近一周涨跌幅', '最近一月涨跌幅', '最近三周涨跌幅', '最近六涨跌幅', '最近一年涨跌幅', '最近两年涨跌幅', '最近三年涨跌幅', '今年以来涨跌幅', '成立以来涨跌幅'])
 # 将数据转化成浮点数
 df[['净值', '累计净值', '日涨跌幅', '最近一周涨跌幅', '最近一月涨跌幅', '最近三周涨跌幅', '最近六涨跌幅', '最近一年涨跌幅', '最近两年涨跌幅', '最近三年涨跌幅', '今年以来涨跌幅', '成立以来涨跌幅']] = df[['净值', '累计净值', '日涨跌幅', '最近一周涨跌幅', '最近一月涨跌幅', '最近三周涨跌幅', '最近六涨跌幅', '最近一年涨跌幅', '最近两年涨跌幅', '最近三年涨跌幅', '今年以来涨跌幅', '成立以来涨跌幅']].apply(pd.to_numeric, errors='ignore')
-
 
 # 设置一定的策略来挑选合适的基金
 # 选择最近一年涨幅大于50且小于1000的
