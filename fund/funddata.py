@@ -18,9 +18,9 @@ from multiprocessing.dummy import Pool as ThreadPool
 
 
 # 数据库设置
-conn1 = sqlite3.connect("../database1/fundinfo.db", check_same_thread=False)
+conn1 = sqlite3.connect("../database/fundinfo.db", check_same_thread=False)
 c1 = conn1.cursor()
-conn2 = sqlite3.connect("../database1/fundhistory.db", check_same_thread=False)
+conn2 = sqlite3.connect("../database/fundhistory.db", check_same_thread=False)
 c2 = conn2.cursor()
 sql1 = []
 sql2 = []
