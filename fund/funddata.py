@@ -17,6 +17,11 @@ import argparse
 from multiprocessing.dummy import Pool as ThreadPool
 import os
 
+try:
+    os.mkdir("../database/")
+except Exception as e:
+    print(e)
+    
 # 数据库设置
 conn1 = sqlite3.connect("../database/fundinfo.db", check_same_thread=False)
 c1 = conn1.cursor()
