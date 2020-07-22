@@ -6,6 +6,7 @@ import time
 import funddata
 import recommend
 
+
 st.title('基金推荐和数据分析工具 :sunglasses:')
 st.info('[贡献本项目](https://github.com/olixu/Fund)')
 
@@ -30,10 +31,10 @@ if st.button('爬取历史数据'):
     if funddata.check_databases():
         st.info("有历史数据，无需重新爬取！")
     else:
-        st.info("没有历史数据，需要重新爬取！")
+        st.info("没有历史数据，需要重新爬取！系统正在爬数据")
         start_time = time.time()
         exec_time = funddata.get_past_data(thread=30)
-        st.info("数据爬取完成，花费了", time.time()-start_time, 's')
+        st.info("数据爬取完成，花费了"+str(time.time()-start_time)+'s')
 
 
 # 强制重新爬取基金历史数据
@@ -44,8 +45,5 @@ if st.button('强制重新爬取基金历史数据'):
     #st.write("历史数据库已经删除，正在重新爬取数据")
     #start_time = time.time()
     #exec_time = funddata.get_past_data(thread=30)
-    #st.write("数据爬取完成，花费了", time.time()-start_time, 's')
+    #st.info("数据爬取完成，花费了"+str(time.time()-start_time)+'s')
 
-
-
-st.markdown("")

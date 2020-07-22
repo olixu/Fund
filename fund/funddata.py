@@ -21,7 +21,7 @@ try:
     os.mkdir("../database/")
 except Exception as e:
     print(e)
-    
+
 # 数据库设置
 conn1 = sqlite3.connect("../database/fundinfo.db", check_same_thread=False)
 c1 = conn1.cursor()
@@ -284,14 +284,19 @@ def get_new_data():
     conn2.commit()
     conn2.close()
 
+def get_FileSize(filePath):
+    fsize = os.path.getsize(filePath)
+    fsize = fsize/float(1024*1024)
+    return round(fsize,2)
+
 #检查数据库是否完整
 def check_databases():
     if os.path.exists('../database/fundhistory.db'):
-        print("有历史数据库，无需重新爬取")
-        return True
-    else:
-        print("没有历史数据库，需要重新爬取")
-        return False
+        if get_FileSize("../database/fundhistory.db")>400:
+            print("有历史数据库，无需重新爬取")
+            return True
+    print("没有历史数据库，需要重新爬取")
+    return False
 
 def delete_databases():
     if check_databases()==True:    
