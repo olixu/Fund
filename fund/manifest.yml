@@ -1,0 +1,6 @@
+applications:
+- path: .
+  name: Streamlittest
+  random-route: true
+  memory: 256M
+  command: streamlit run main.py --server.port 8080

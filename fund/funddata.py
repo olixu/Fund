@@ -15,7 +15,7 @@ import time
 import json
 import argparse
 from multiprocessing.dummy import Pool as ThreadPool
-
+import os
 
 # 数据库设置
 conn1 = sqlite3.connect("../database/fundinfo.db", check_same_thread=False)
@@ -80,6 +80,16 @@ create table if not exists "{}"(
     rate_from_begin text
 );
 '''
+
+# 函数计算时间装饰器
+def count_time(func):
+    def int_time(*args, **kwargs):
+        start_time = time.time()  # 程序开始时间
+        func()
+        total_time = time.time()  - start_time
+        print('程序共计%s秒' % total_time)
+
+    return int_time
 
 # 获得所有基金的当日净值
 def get_fund_earning_perday(only_code=True):
@@ -200,6 +210,7 @@ def fund_history(code):
         print(e)
         return False
 
+
 def detail(code):
     # 爬取所有基金的详情信息
     status = fund_info(code)
@@ -227,7 +238,8 @@ def code_split(codes, n):
     for i in range(0, len(codes), n):
         yield codes[i:i+n]
 
-def get_past_data(thread):
+@count_time
+def get_past_data(thread=30):
     global sql1, sql2
     print("正在获取基金的历史数据")
     # 获取所有的基金的code
@@ -257,6 +269,8 @@ def get_past_data(thread):
     conn2.commit()
     conn2.close()
 
+# 获取最新的数据
+@count_time
 def get_new_data():
     print("正在获取最新的基金数据")
     get_fund_earning_perday(only_code=False)
@@ -265,11 +279,34 @@ def get_new_data():
     conn2.commit()
     conn2.close()
 
+#检查数据库是否完整
+def check_databases():
+    if os.path.exists('../database/fundhistory.db'):
+        print("有历史数据库，无需重新爬取")
+        return True
+    else:
+        print("没有历史数据库，需要重新爬取")
+        return False
+
+def delete_databases():
+    if check_databases()==True:    
+        try:
+            # 关闭数据库连接，这里需要先关闭，后面再打开
+            conn1.commit()
+            conn1.close()
+            conn2.commit()
+            conn2.close()
+            os.remove('../database/fundinfo.db')
+            os.remove('../database/fundhistory.db')
+        except Exception as e:
+            print(e)
+        conn1 = sqlite3.connect("../database/fundinfo.db", check_same_thread=False)
+        conn2 = sqlite3.connect("../database/fundhistory.db", check_same_thread=False)
 
 if __name__=="__main__":
     parser = argparse.ArgumentParser(description="基金数据采集工具")
     parser.add_argument('-m', '--mode', default="new", help="两种可选的模式：past:采集历史净值，new:采集最新净值，默认为new")
-    parser.add_argument('-t', '--thread', default=30, help="爬取历史净值的线程数，默认为10")
+    parser.add_argument('-t', '--thread', default=30, help="爬取历史净值的线程数，默认为30")
     args = parser.parse_args()
     mode = args.mode 
     thread = int(args.thread)

@@ -38,7 +38,7 @@ codes = sorted(set(codes), key = codes.index)
 
 for code in codes:
     # 先删除所有的历史的最新数据，方便验证
-    #outcome = c2.execute("select * from '" + code + "' where date='{}'".format('2020-06-10'))
+    #outcome = c2.execute("select * from '" + code + "' where date='{}'".format('2020-07-20'))
     outcome = c2.execute("select * from '" + code + "' where date='{}'".format(date_p))
     for _ in outcome:
         x = list(_)
@@ -54,7 +54,7 @@ df[['净值', '累计净值', '日涨跌幅', '最近一周涨跌幅', '最近�
 record = df[(df['最近一年涨跌幅']>50) & (df['最近一年涨跌幅']<1000)]
 record1 = record[record['最近一周涨跌幅']<-2.0]
 print(record1)
-record2 = record[record['最近一周涨跌幅']>5.0]
+record2 = record[record['最近一周涨跌幅']>1.0]
 print(record2)
 
 # 关闭数据库连接
