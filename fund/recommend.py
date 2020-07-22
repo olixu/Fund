@@ -19,13 +19,15 @@ import requests
 import datetime
 
 
-# 数据库设置
-conn1 = sqlite3.connect("../database/fundinfo.db")
-c1 = conn1.cursor()
-conn2 = sqlite3.connect("../database/fundhistory.db")
-c2 = conn2.cursor()
 
-def recom():
+def recom(para1, para2, para3):
+
+    # 数据库设置
+    conn1 = sqlite3.connect("../database/fundinfo.db")
+    c1 = conn1.cursor()
+    conn2 = sqlite3.connect("../database/fundhistory.db")
+    c2 = conn2.cursor()
+
     codes = []
     data = []
     tables = c2.execute("select tbl_name from sqlite_master")
@@ -51,10 +53,10 @@ def recom():
 
     # 设置一定的策略来挑选合适的基金
     # 选择最近一年涨幅大于50且小于1000的
-    record = df[(df['最近一年涨跌幅']>50) & (df['最近一年涨跌幅']<1000)]
-    record1 = record[record['最近一周涨跌幅']<-2.0]
+    record = df[(df['最近一年涨跌幅']>para1) & (df['最近一年涨跌幅']<1000)]
+    record1 = record[record['最近一周涨跌幅']<para2]
     print(record1)
-    record2 = record[record['最近一周涨跌幅']>1.0]
+    record2 = record[record['最近一周涨跌幅']>para3]
     print(record2)
 
     # 关闭数据库连接
@@ -68,12 +70,12 @@ def recom():
     sell_codes = record2['代码']
 
     buy = '''
-    ## 建议申购的基金
+    ### 建议申购的基金
 
     '''
 
     sell = '''
-    ## 建议赎回的基金
+    ### 建议赎回的基金
 
     '''
     for i in buy_codes:
@@ -89,6 +91,7 @@ def recom():
 
     response = requests.post(url="https://sc.ftqq.com/SCU99784Te024d0b9ba13f4e59deaf0fbc30ed1df5ed0dbc5548c4.send", data=data1)
     print(response)
+    return buy, sell
 
 if __name__=="__main__":
     recom()
