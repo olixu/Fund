@@ -207,14 +207,14 @@ class fund_crawler():
         status = self.fund_info(code)
         print("当前的基金代码： ", code)
         while(status==False):
-            print("ERROR：抓取基金的基本信息数据时发生错误，sleep 10秒后继续抓取，当前的code是：", code)
-            time.sleep(10)
+            print("ERROR：抓取基金的基本信息数据时发生错误，sleep 3秒后继续抓取，当前的code是：", code)
+            time.sleep(3)
             status = self.fund_info(code)
         # 爬取所有基金的历史详细数据
         status = self.fund_history(code)
         while(status==False):
-            print("ERROR：抓取历史详细数据时发生错误，sleep 10秒后继续抓取，当前的code是：", code)
-            time.sleep(10)
+            print("ERROR：抓取历史详细数据时发生错误，sleep 3秒后继续抓取，当前的code是：", code)
+            time.sleep(3)
             status = self.fund_history(code)
 
     # commit sql
@@ -244,7 +244,7 @@ class fund_crawler():
         for i in range(0, len(codes), n):
             yield codes[i:i+n]
 
-    def get_past_data(self, thread=30):
+    def get_past_data(self, thread=10):
         self.c1, self.c2 , self.conn1, self.conn2= self.db_init()
         print("正在获取基金的历史数据")
         # 获取所有的基金的code
