@@ -35,7 +35,43 @@
 4. 微信推送采用【Server酱】的微信推送服务。
 5. 部署环境：IBM 的CF服务可以免费注册使用，基金设置策略筛选模块我在本地已经测试了一个月，非常稳定。所有基金的历史数据到20200629日，共占用存储空间400多MB，IBM的免费套餐支持1GB的存储空间，应该可以支持长期使用。
 
+## 项目结构
 
+```bash
+(base) ➜  Fund git:(master) tree .
+.
+|-- LICENSE
+|-- Makefile
+|-- README.md
+|-- database_temp
+|   `-- create_table.sql
+|-- fund
+|   |-- Procfile
+|   |-- README.md
+|   |-- __init__.py
+|   |-- __pycache__
+|   |   |-- funddata.cpython-38.pyc
+|   |   `-- recommend.cpython-38.pyc
+|   |-- fund.bat
+|   |-- funddata.py
+|   |-- main.py
+|   |-- manifest.yml
+|   |-- recommend.py
+|   `-- requirements.txt
+|-- images
+|   `-- \351\241\271\347\233\256\350\215\211\347\250\27720200629.png
+|-- requirements.txt
+|-- setup.py
+`-- tests
+    `-- __init__.py
+```
+fund采用pypi package的封装结构，fund为库的名字，`funddata.py`为采集模块，采集天天基金的数据，并写入到api中，采集数据分为两部分，一部分是历史数据，一部分是增量数据。`recommend.py`模块为基金推荐模块，通过设置一定的策略，进行推荐策略。
+
+## TODO
+1. 增加几种常用的数据库支持：Mysql
+2. 优化数据库表结构
+3. 优化现有的根据阈值设置的量化策略指标
+4. 增加量化策略指标策略，例如当前值占历史估值的百分位
 
 ## 更新日志：
 
