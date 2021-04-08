@@ -36,7 +36,7 @@
 5. 部署环境：IBM 的CF服务可以免费注册使用，基金设置策略筛选模块我在本地已经测试了一个月，非常稳定。所有基金的历史数据到20200629日，共占用存储空间400多MB，IBM的免费套餐支持1GB的存储空间，应该可以支持长期使用。
 
 ## 项目结构
-
+### V 1.0.0
 ```bash
 (base) ➜  Fund git:(master) tree .
 .
@@ -66,6 +66,31 @@
     `-- __init__.py
 ```
 fund采用pypi package的封装结构，fund为库的名字，`funddata.py`为采集模块，采集天天基金的数据，并写入到api中，采集数据分为两部分，一部分是历史数据，一部分是增量数据。`recommend.py`模块为基金推荐模块，通过设置一定的策略，进行推荐策略。
+
+### V 2.0.0
+2021年4月8日开始对代码进行重构，具体包括数据采集模块的鲁棒性设计，回测模块的设计，策略模块的设计，web模块的设计等
+```bash
+.
+|-- LICENSE
+|-- Makefile
+|-- README.md
+|-- database
+|-- fund
+|-- images
+|-- requirements.txt
+|-- scripts
+|-- setup.py
+|-- tests
+`-- web
+```
+其中，`fund`文件夹是核心模块：
+```bash
+.
+|-- common
+|-- policy
+`-- requirements.txt
+```
+`common`模块主要用于一些基础组件，例如数据库连接，爬虫等，`policy`模块主要用于策略的编写，结合上层目录中的`script`模块，进行回测模块的整合。
 
 ## TODO
 1. 增加几种常用的数据库支持：Mysql

@@ -41,7 +41,7 @@ class fund_crawler():
                     fund_url text,
                     tpye text,
                     publish_date text,
-                    setup_date_and scale text,
+                    setup_date_and_scale text,
                     asset_scale text,
                     amount_scale text,
                     company text,
@@ -91,7 +91,7 @@ class fund_crawler():
 
 
     # 获得所有基金的当日净值
-    def get_fund_earning_perday(self, only_code=True):
+    def get_fund_earning_perday(self, only_code=False):
         print("正在获得所有基金的当日净值")
         codes = []
         response = requests.get(url="http://fund.eastmoney.com/data/rankhandler.aspx?op=ph&dt=kf&ft=all&rs=&gs=0&sc=dm&st=asc&sd=2019-05-30&ed=2020-05-30&qdii=&tabSubtype=,,,,,&pi=1&pn=10000&dx=1&v=0.2826407199538974", headers=self.headers)
@@ -122,8 +122,8 @@ class fund_crawler():
                 codes.append(code)
             else:
                 try:
-                    self.c2.execute("insert or ignore into '{}' values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)".format(code), list(item.values()))
-                    pass
+                    self.c2.execute("insert or replace into '{}' values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)".format(code), list(item.values()))
+                    # 插入新的item的时候需要使用replace
                 except Exception as e:
                     print(e)
         return codes
@@ -273,7 +273,7 @@ class fund_crawler():
 
     # 获取最新的数据
     def get_new_data(self):
-        self.c1, self.c2 , self.conn1, self.conn2= self.db_init()
+        self.c1, self.c2 , self.conn1, self.conn2 = self.db_init()
         print("正在获取最新的基金数据")
         self.get_fund_earning_perday(only_code=False)
         self.close_db()
@@ -304,8 +304,12 @@ class fund_crawler():
         self.c1, self.c2 , self.conn1, self.conn2 = self.db_init()
 
 if __name__=="__main__":
+    # 爬取历史数据
     crawler = fund_crawler()
-    print(crawler.get_past_data())
+    #crawler.get_past_data()
+    # 爬取最新的数据库
+    crawler.get_new_data()
+
 
 
 '''
